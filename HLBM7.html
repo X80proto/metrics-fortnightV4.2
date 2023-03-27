@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hogwarts Legacy Chart</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <style>
+        h2{
+            font-family: 'Montserrat', sans-serif;
+            color: rgb(109, 109, 109);
+            text-align: center;
+            width: 90%; /* adjust this value based on your preference */
+            margin: 0 auto; /* this centers the container element on the page */
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div style="overflow-x: auto;">
+        <!-- Create a canvas element where the chart will be displayed -->
+        <canvas id="myChart"></canvas>
+        <script>
+            // Get the canvas element and its 2D context
+            var ctx = document.getElementById('myChart').getContext('2d');
+            // Initialize arrays to store the labels and data of each graphics card
+            var labels = [];
+            var data = [];
+
+            // Define an array of objects, each with a graphics card label and its corresponding FPS data
+            var value = [
+                { label: "GeForce RTX 4090 (24GB)", data: 79 },
+                { label: "GeForce RTX 4080 (16GB)", data: 66 },
+                { label: "GeForce RTX 4070 Ti (12GB)", data: 58 },
+                { label: "GeForce RTX 3070 Ti (8GB)", data: 31 },
+                { label: "GeForce RTX 2080 Ti (11GB)", data: 37 },
+                { label: "Radeon RX 7900 XTX (24GB)", data: 73 },
+                { label: "Radeon RX 7900 XT (20GB)", data: 61 },
+                { label: "Radeon RX 6700 XT (12GB)", data: 31 },
+                { label: "Radeon RX 6600 XT (8GB)", data: 25 },
+                { label: "Intel Arc A770 (16GB)", data: 27 },
+
+            ];
+
+            // Map the values from the "value" array into the "labels" and "data" arrays
+            data = value.map(function(item) {
+                labels.push(item.label);
+                return item.data;
+            });
+
+            // Define the background and border colors for each bar in the chart
+            var backgroundColor = [];
+            var borderColor = [];
+            for (var i = 0; i < value.length; i++) {
+                if (i % 2 == 0) {
+                    backgroundColor.push('rgba(255, 99, 132, 0.2)');
+                    borderColor.push('rgba(255, 99, 132, 1)');
+                } else {
+                    backgroundColor.push('rgba(54, 162, 235, 0.2)');
+                    borderColor.push('rgba(54, 162, 235, 1)');
+                }
+            }
+
+            // Sort the data and labels in descending order based on the FPS data
+            var dataWithIndices = value.map(function(value, index) {
+                return {data: value.data, label: value.label, index: index};
+            });
+            dataWithIndices.sort(function(a, b) {
+                return b.data - a.data;
+            });
+
+            // Initialize arrays to store the sorted data, labels, and colors
+            var sortedData = [];
+            var sortedLabels = [];
+            var sortedBackgroundColor = [];
+            var sortedBorderColor = [];
+            // Map the values from the "dataWithIndices" array into the corresponding sorted arrays
+            dataWithIndices.forEach(function(dataWithIndex, index) {
+                sortedData.push(dataWithIndex.data);
+                sortedLabels.push(dataWithIndex.label);
+                var colorIndex = index % 2;
+                sortedBackgroundColor.push(backgroundColor[colorIndex]);
+                sortedBorderColor.push(borderColor[colorIndex]);
+            });
+
+            var data = {
+                labels: sortedLabels,
+                datasets: [{
+                    label: "FPS AVG",
+                    data: sortedData,
+                    backgroundColor: sortedBackgroundColor,
+                    borderColor: sortedBorderColor,
+                    borderWidth: 1
+                }]
+            };
+
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: data,
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Graphics Card Performance in Hogwarts Legacy (4K Ultra Quality)',
+                        fontSize: 24
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 14,
+                                beginAtZero: true
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Frames Per Second (Average)',
+                                fontSize: 18
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 14
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Graphics Card Model',
+                                fontSize: 18
+                            }
+                        }]
+                    },
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    legend: {
+                        onClick: function(e) {
+                            e.stopPropagation();
+                        },
+                        display: false
+                    }
+                }
+            });
+
+
+        </script>
+        <h2><br>Please rotate screen to landscape orientation, for a better viewing experience on smaller devices</h2>
+    </div>
+</body>
+</html>

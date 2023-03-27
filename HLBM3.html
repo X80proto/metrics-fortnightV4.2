@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hogwarts Legacy Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <style>
+        canvas {
+            
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myChart" width="400" height="170"></canvas>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var labels = [];
+        var data = [];
+
+        var value = [
+            { label: "GeForce RTX 4090 (24GB)", data: 79 },
+            { label: "GeForce RTX 4080 (16GB)", data: 66 },
+            { label: "GeForce RTX 4070 Ti (12GB)", data: 58 },
+            { label: "GeForce RTX 3070 Ti (8GB)", data: 31 },
+            { label: "GeForce RTX 2080 Ti (11GB)", data: 37 },
+            { label: "Radeon RX 7900 XTX (24GB)", data: 73 },
+            { label: "Radeon RX 7900 XT (20GB)", data: 61 },
+            { label: "Radeon RX 6700 XT (12GB)", data: 31 },
+            { label: "Radeon RX 6600 XT (8GB)", data: 25 },
+            { label: "Intel Arc A770 (16GB)", data: 27 },
+
+        ];
+
+        data = value.map(function(item) {
+            labels.push(item.label);
+            return item.data;
+        });
+
+        var backgroundColor = [];
+        var borderColor = [];
+        for (var i = 0; i < value.length; i++) {
+            if (i % 2 == 0) {
+                backgroundColor.push('rgba(255, 99, 132, 0.2)');
+                borderColor.push('rgba(255, 99, 132, 1)');
+            } else {
+                backgroundColor.push('rgba(54, 162, 235, 0.2)');
+                borderColor.push('rgba(54, 162, 235, 1)');
+            }
+        }
+
+        // sort data and labels in descending order
+        var dataWithIndices = value.map(function(value, index) {
+            return {data: value.data, label: value.label, index: index};
+        });
+        dataWithIndices.sort(function(a, b) {
+            return b.data - a.data;
+        });
+
+        var sortedData = [];
+        var sortedLabels = [];
+        var sortedBackgroundColor = [];
+        var sortedBorderColor = [];
+        dataWithIndices.forEach(function(dataWithIndex, index) {
+            sortedData.push(dataWithIndex.data);
+            sortedLabels.push(dataWithIndex.label);
+            var colorIndex = index % 2;
+            sortedBackgroundColor.push(backgroundColor[colorIndex]);
+            sortedBorderColor.push(borderColor[colorIndex]);
+        });
+
+        var data = {
+            labels: sortedLabels,
+            datasets: [{
+                label: "Hogwarts Legacy (4K Ultra Quality)",
+                data: sortedData,
+                backgroundColor: sortedBackgroundColor,
+                borderColor: sortedBorderColor,
+                borderWidth: 1
+            }]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: data,
+            options: {
+                title: {
+                display: true,
+                text: 'Graphics Card Performance in Hogwarts Legacy (4K Ultra Quality)',
+                fontSize: 24
+                },
+                scales: {
+                xAxes: [{
+                    ticks: {
+                    fontSize: 14,
+                    beginAtZero: true
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                    fontSize: 14
+                    }
+                }]
+                },
+                backgroundColor: 'rgba(255, 255, 255, 0.8)'
+            }
+        });
+
+    </script>
+</body>
+</html>
